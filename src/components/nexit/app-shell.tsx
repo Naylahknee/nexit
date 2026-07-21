@@ -12,6 +12,7 @@ import {
   Globe2,
   LayoutDashboard,
   LogOut,
+  MapPinned,
   Search,
   Settings,
   Sparkles,
@@ -20,6 +21,7 @@ import { Wordmark } from './wordmark'
 
 const navigation = [
   { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
+  { href: '/nexitnation', label: 'Nexitnation', icon: MapPinned },
   { href: '/visa-wizard', label: 'Visa Wizard', icon: Sparkles },
   { href: '/countries', label: 'Countries', icon: Globe2 },
   { href: '/cost-calculator', label: 'Cost Calculator', icon: Calculator },
@@ -110,7 +112,7 @@ export function AppShell({ children, email }: { children: React.ReactNode; email
       <nav className="fixed inset-x-0 bottom-0 z-30 flex justify-around border-t border-line bg-white px-2 py-2 md:hidden" aria-label="Mobile navigation">
         {navigation.map(({ href, label, icon: Icon }) => {
           const active = pathname === href || pathname.startsWith(`${href}/`)
-          return <Link key={href} href={href} className={`flex min-w-14 flex-col items-center gap-1 rounded-lg px-1 py-1 text-[10px] font-semibold ${active ? 'text-gold-deep' : 'text-muted'}`}><Icon size={20} /><span>{label.replace('Cost Calculator', 'Costs').replace('Move Checklist', 'Checklist').replace('Visa Wizard', 'Visa')}</span></Link>
+          return <Link key={href} href={href} className={`flex min-w-12 flex-col items-center gap-1 rounded-lg px-1 py-1 text-[10px] font-semibold ${active ? 'text-gold-deep' : 'text-muted'}`}><Icon size={20} /><span>{label.replace('Cost Calculator', 'Costs').replace('Move Checklist', 'Checklist').replace('Visa Wizard', 'Visa').replace('Nexitnation', 'Explore')}</span></Link>
         })}
       </nav>
     </div>

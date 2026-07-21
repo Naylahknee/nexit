@@ -30,6 +30,7 @@ export const config = {
   matcher: [
     '/onboarding/:path*',
     '/dashboard/:path*',
+    '/nexitnation/:path*',
     '/visa-wizard/:path*',
     '/countries/:path*',
     '/checklist/:path*',

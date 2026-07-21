@@ -123,6 +123,66 @@ textarea:focus-visible {
   transform: none;
 }
 
+.nexit-map-marker {
+  display: flex;
+  min-width: 36px;
+  flex-direction: column;
+  align-items: center;
+  border: 0;
+  background: transparent;
+  color: #17305b;
+  cursor: pointer;
+}
+
+.nexit-map-marker__dot {
+  display: block;
+  width: 22px;
+  height: 22px;
+  border: 4px solid #ffffff;
+  border-radius: 999px;
+  background: #f3c516;
+  box-shadow: 0 8px 20px rgba(13, 27, 57, 0.32);
+  transition: transform 160ms ease, background-color 160ms ease;
+}
+
+.nexit-map-marker__label {
+  margin-top: 4px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.94);
+  padding: 4px 8px;
+  font-size: 10px;
+  font-weight: 800;
+  white-space: nowrap;
+  box-shadow: 0 8px 24px rgba(13, 27, 57, 0.16);
+}
+
+.nexit-map-marker:hover .nexit-map-marker__dot,
+.nexit-map-marker:focus-visible .nexit-map-marker__dot,
+.nexit-map-marker[data-active="true"] .nexit-map-marker__dot {
+  transform: scale(1.25);
+  background: #17305b;
+}
+
+.nexit-map-marker[data-active="true"] .nexit-map-marker__label {
+  background: #17305b;
+  color: #ffffff;
+}
+
+.nexit-map-popup .mapboxgl-popup-content {
+  max-width: 220px;
+  border-radius: 12px;
+  padding: 12px 14px;
+  color: #17305b;
+  font-size: 12px;
+  line-height: 1.5;
+  box-shadow: 0 12px 30px rgba(13, 27, 57, 0.18);
+}
+
+.mapboxgl-ctrl-group {
+  overflow: hidden;
+  border-radius: 12px !important;
+}
+
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; }
