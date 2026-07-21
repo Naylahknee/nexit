@@ -22,10 +22,10 @@ import { Wordmark } from './wordmark'
 const navigation = [
   { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { href: '/nexitnation', label: 'Nexitnation', icon: MapPinned },
-  { href: '/visa-wizard', label: 'Visa Wizard', icon: Sparkles },
+  { href: '/visa-wizard', label: 'Pathways Wizard', icon: Sparkles },
   { href: '/countries', label: 'Countries', icon: Globe2 },
   { href: '/cost-calculator', label: 'Cost Calculator', icon: Calculator },
-  { href: '/checklist', label: 'Move Checklist', icon: CheckSquare },
+  { href: '/checklist', label: 'Nexit Tracker', icon: CheckSquare },
 ]
 
 const secondary = [
@@ -75,7 +75,7 @@ export function AppShell({ children, email }: { children: React.ReactNode; email
           ))}
         </div>
         <div className="mt-auto rounded-card border border-white/10 bg-navy-card p-4 text-center">
-          <p className="text-xs font-semibold text-[#cdd7e8]">Nexit Score</p>
+          <p className="text-xs font-semibold text-[#cdd7e8]">Nexit Readiness</p>
           <div className="mx-auto mt-3 grid size-20 place-items-center rounded-full" style={{ background: 'conic-gradient(#f3c516 0 72%, rgba(255,255,255,.12) 72%)' }}>
             <div className="grid size-16 place-items-center rounded-full bg-navy-card text-2xl font-extrabold text-white">72</div>
           </div>
@@ -89,13 +89,13 @@ export function AppShell({ children, email }: { children: React.ReactNode; email
             <div className="md:hidden"><Wordmark compact /></div>
             <form onSubmit={search} className="ml-auto hidden max-w-xl flex-1 items-center gap-2 rounded-field border border-line bg-white px-3 md:flex">
               <Search size={17} className="text-muted" />
-              <input name="query" aria-label="Search countries" placeholder="Search countries, visas, and more..." className="h-11 min-w-0 flex-1 bg-transparent text-sm outline-none" />
+              <input name="query" aria-label="Search Nextinations" placeholder="Search Nextinations, Pathways, and more..." className="h-11 min-w-0 flex-1 bg-transparent text-sm outline-none" />
             </form>
             <div className="relative">
               <button type="button" onClick={() => setNoticesOpen((value) => !value)} aria-label="Notifications" className="relative grid size-11 place-items-center rounded-xl border border-line bg-white text-navy">
                 <Bell size={19} /><span className="absolute right-2.5 top-2.5 size-2 rounded-full border border-white bg-danger" />
               </button>
-              {noticesOpen ? <div className="absolute right-0 top-13 w-72 rounded-card border border-line bg-white p-4 text-sm shadow-xl"><p className="font-bold">You&apos;re making progress</p><p className="mt-1 text-muted">Complete the visa wizard to unlock your best matches.</p></div> : null}
+              {noticesOpen ? <div className="absolute right-0 top-13 w-72 rounded-card border border-line bg-white p-4 text-sm shadow-xl"><p className="font-bold">Your Nexit Readiness is growing</p><p className="mt-1 text-muted">Complete the Pathways Wizard to refine your Match Scores.</p></div> : null}
             </div>
             <div className="relative">
               <button type="button" onClick={() => setMenuOpen((value) => !value)} className="flex items-center gap-2 rounded-xl border border-line bg-white p-1.5 pr-3 text-sm font-semibold text-navy">
@@ -112,7 +112,7 @@ export function AppShell({ children, email }: { children: React.ReactNode; email
       <nav className="fixed inset-x-0 bottom-0 z-30 flex justify-around border-t border-line bg-white px-2 py-2 md:hidden" aria-label="Mobile navigation">
         {navigation.map(({ href, label, icon: Icon }) => {
           const active = pathname === href || pathname.startsWith(`${href}/`)
-          return <Link key={href} href={href} className={`flex min-w-12 flex-col items-center gap-1 rounded-lg px-1 py-1 text-[10px] font-semibold ${active ? 'text-gold-deep' : 'text-muted'}`}><Icon size={20} /><span>{label.replace('Cost Calculator', 'Costs').replace('Move Checklist', 'Checklist').replace('Visa Wizard', 'Visa').replace('Nexitnation', 'Explore')}</span></Link>
+          return <Link key={href} href={href} className={`flex min-w-12 flex-col items-center gap-1 rounded-lg px-1 py-1 text-[10px] font-semibold ${active ? 'text-gold-deep' : 'text-muted'}`}><Icon size={20} /><span>{label.replace('Cost Calculator', 'Costs').replace('Nexit Tracker', 'Tracker').replace('Pathways Wizard', 'Pathways')}</span></Link>
         })}
       </nav>
     </div>

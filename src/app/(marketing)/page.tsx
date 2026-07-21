@@ -15,30 +15,30 @@ import {
 import { MarketingMobileNav } from '@/components/nexit/marketing-mobile-nav'
 import { Wordmark } from '@/components/nexit/wordmark'
 
-const journey = [
+const nexitSteps = [
   {
     image: '/images/journey-globe-pins.png',
-    title: 'Explore countries',
-    copy: 'Compare destinations, visa paths, and monthly costs side by side.',
-    action: 'Explore options',
+    title: 'Choose a Nextination',
+    copy: 'Compare Nextinations, Pathways, and monthly costs side by side.',
+    action: 'Choose your Nexitnation',
   },
   {
     image: '/images/passport-visa-documents.png',
-    title: 'Find your visa',
+    title: 'Review your Pathways',
     copy: 'Answer focused questions and get a practical starting shortlist.',
     action: 'Get matched',
   },
   {
     image: '/images/luggage-tropical-coast.png',
-    title: 'Plan your move',
+    title: 'Build your Nexit Plan',
     copy: 'Track documents, budget, and the tasks that turn a plan into a departure.',
-    action: 'Start planning',
+    action: 'Start Your Nexit',
   },
 ]
 
 const stats = [
   { value: '50+', label: 'Countries', icon: Globe2 },
-  { value: '120+', label: 'Visa options', icon: FileCheck2 },
+  { value: '120+', label: 'Pathways', icon: FileCheck2 },
   { value: '20K+', label: 'Planners', icon: UsersRound },
   { value: '4.8/5', label: 'Average rating', icon: Star },
 ]
@@ -63,10 +63,10 @@ export default function LandingPage() {
             <nav className="hidden items-center gap-7 text-sm font-semibold text-white/75 md:flex" aria-label="Landing navigation">
               <a href="#how-it-works" className="transition hover:text-white">How it works</a>
               <a href="#features" className="transition hover:text-white">Features</a>
-              <a href="#destinations" className="transition hover:text-white">Destinations</a>
+              <a href="#nextinations" className="transition hover:text-white">Nextinations</a>
               <a href="#community" className="transition hover:text-white">Community</a>
               <Link href="/login" className="transition hover:text-white">Sign in</Link>
-              <Link href="/signup" className="gold-button !min-h-10 !px-4">Get started</Link>
+              <Link href="/signup?next=%2Fnexitnation" className="gold-button !min-h-10 !px-4">Start Your Nexit</Link>
             </nav>
             <MarketingMobileNav />
           </header>
@@ -79,11 +79,11 @@ export default function LandingPage() {
                 <span className="italic text-gold">Build your next<br className="hidden sm:block" /> life abroad.</span>
               </h1>
               <p className="mt-6 max-w-[430px] text-base leading-7 text-[#c3d0e6]">
-                Compare countries, understand visa paths, and build a realistic move plan—without piecing it together across a dozen tabs.
+                Compare Nextinations, review Pathways, and build a realistic Nexit Plan without piecing it together across a dozen tabs.
               </p>
               <div className="mt-8 flex flex-wrap gap-3">
-                <Link href="/signup" className="gold-button">Start your plan <ArrowRight size={17} /></Link>
-                <Link href="/signup" className="inline-flex min-h-12 items-center rounded-xl border border-white/25 px-5 font-bold text-white transition hover:bg-white/8">
+                <Link href="/signup?next=%2Fnexitnation" className="gold-button">Start Your Nexit <ArrowRight size={17} /></Link>
+                <Link href="#how-it-works" className="inline-flex min-h-12 items-center rounded-xl border border-white/25 px-5 font-bold text-white transition hover:bg-white/8">
                   See how it works
                 </Link>
               </div>
@@ -93,7 +93,7 @@ export default function LandingPage() {
 
         <section id="features" className="relative z-20 mx-3 -mt-9 grid overflow-hidden rounded-[18px] border border-line bg-white shadow-[0_20px_50px_-30px_rgba(16,34,68,.4)] sm:mx-8 sm:grid-cols-3">
           {[
-            [Sparkles, 'Find your best visa', 'Smart matching based on your profile'],
+            [Sparkles, 'Find your strongest Pathway', 'Match Scores based on your Nexit Profile'],
             [Calculator, 'Plan your budget', 'Understand realistic costs before you move'],
             [CheckCircle2, 'Move with confidence', 'A step-by-step checklist that stays on track'],
           ].map(([Icon, title, copy], index) => (
@@ -107,12 +107,12 @@ export default function LandingPage() {
         <section id="how-it-works" className="pb-20 pt-24 sm:pt-28">
           <div className="text-center">
             <p className="text-xs font-extrabold uppercase tracking-[0.22em] text-gold-deep">A practical path forward</p>
-            <h2 className="mt-3 font-display text-4xl font-extrabold text-navy sm:text-5xl">Your journey to freedom starts here</h2>
+            <h2 className="mt-3 font-display text-4xl font-extrabold text-navy sm:text-5xl">Your Nexit starts here</h2>
             <div className="mx-auto mt-5 h-1 w-16 rounded-full bg-gold" />
           </div>
 
-          <div id="destinations" className="mt-11 grid gap-5 md:grid-cols-3">
-            {journey.map((item) => (
+          <div id="nextinations" className="mt-11 grid gap-5 md:grid-cols-3">
+            {nexitSteps.map((item) => (
               <article key={item.title} className="group overflow-hidden rounded-[20px] border border-line bg-white shadow-card">
                 <div className="relative aspect-[4/3] overflow-hidden bg-canvas">
                   <Image src={item.image} alt="" fill sizes="(min-width: 768px) 33vw, 100vw" className="object-cover transition duration-500 group-hover:scale-[1.025]" />
@@ -120,7 +120,7 @@ export default function LandingPage() {
                 <div className="p-6">
                   <h3 className="text-xl font-extrabold text-navy">{item.title}</h3>
                   <p className="mt-2 min-h-12 text-sm leading-6 text-muted">{item.copy}</p>
-                  <Link href="/signup" className="mt-5 inline-flex items-center gap-2 text-sm font-extrabold text-gold-deep">{item.action}<ArrowRight size={15} /></Link>
+                  <Link href="/signup?next=%2Fnexitnation" className="mt-5 inline-flex items-center gap-2 text-sm font-extrabold text-gold-deep">{item.action}<ArrowRight size={15} /></Link>
                 </div>
               </article>
             ))}
@@ -166,7 +166,7 @@ export default function LandingPage() {
             <UsersRound size={34} className="text-teal-soft" />
             <h3 className="mt-10 max-w-lg font-display text-3xl font-extrabold sm:text-4xl">A place for the questions that don’t fit on an application form.</h3>
             <p className="mt-4 max-w-xl text-sm leading-6 text-white/75">Learn from people researching neighborhoods, paperwork, budgets, healthcare, and the everyday reality of starting again somewhere new.</p>
-            <Link href="/signup" className="gold-button mt-7">Join the Nexiters <ArrowRight size={17} /></Link>
+            <Link href="/signup?next=%2Fnexitnation" className="gold-button mt-7">Join the Nexiters <ArrowRight size={17} /></Link>
           </article>
 
           <div className="grid gap-5 lg:col-span-5">
@@ -190,10 +190,15 @@ export default function LandingPage() {
           <div className="mx-auto w-full max-w-[1180px] px-5">
             <h2 className="max-w-xl font-display text-4xl font-extrabold">Your next chapter deserves a real plan.</h2>
             <p className="mt-3 text-white/75">Compare clearly. Prepare practically. Move with confidence.</p>
-            <Link href="/signup" className="gold-button mt-6">Start your plan <ArrowRight size={17} /></Link>
+            <Link href="/signup?next=%2Fnexitnation" className="gold-button mt-6">Start Your Nexit <ArrowRight size={17} /></Link>
           </div>
         </div>
-        <div className="border-t border-white/10 px-5 py-5 text-center text-xs text-white/55">© 2026 Nexit. Visa recommendations are planning guidance, not legal advice.</div>
+        <div className="border-t border-white/10 px-5 py-5">
+          <div className="mx-auto flex max-w-[1180px] flex-col items-center justify-between gap-4 text-center text-xs text-white/55 sm:flex-row sm:text-left">
+            <Wordmark dark compact />
+            <p>© 2026 Nexit. Visa recommendations are planning guidance, not legal advice.</p>
+          </div>
+        </div>
       </footer>
     </main>
   )
