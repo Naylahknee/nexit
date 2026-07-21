@@ -1,21 +1,29 @@
-import { verifyToken } from '@/lib/auth'
+import { getRequestUser } from '@/lib/auth'
+import { COUNTRY_CODE_BY_NAME } from '@/lib/countries'
 import { getSql } from '@/lib/db'
 
-export async function GET(request: Request) {
-  const authorization = request.headers.get('authorization')
-  const token = authorization?.startsWith('Bearer ') ? authorization.slice(7) : undefined
+type CountryRow = {
+  id: number
+  name: string
+  visa_type: string
+  income_required: number
+}
 
-  if (!token) return Response.json({ error: 'Unauthorized' }, { status: 401 })
+export async function GET(request: Request) {
+  if (!(await getRequestUser(request))) return Response.json({ error: 'Unauthorized' }, { status: 401 })
 
   try {
-    await verifyToken(token)
     const countries = await getSql()`
       SELECT id, name, visa_type, income_required
       FROM countries
       ORDER BY income_required ASC
-    `
-    return Response.json(countries)
+    ` as CountryRow[]
+
+    return Response.json(countries.map((country) => ({
+      ...country,
+      country_code: COUNTRY_CODE_BY_NAME[country.name] ?? null,
+    })))
   } catch {
-    return Response.json({ error: 'Invalid or expired session.' }, { status: 401 })
+    return Response.json({ error: 'Unable to load countries.' }, { status: 500 })
   }
 }

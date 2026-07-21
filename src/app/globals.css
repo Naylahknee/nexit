@@ -1,19 +1,126 @@
 @import "tailwindcss";
 
-:root {
-  --background: #07100d;
-  --foreground: #f5f5f4;
+@theme inline {
+  --color-navy: #17305b;
+  --color-navy-deep: #0d1b39;
+  --color-navy-card: #122a52;
+  --color-gold: #f3c516;
+  --color-gold-deep: #9a7100;
+  --color-gold-soft: #fbeeb6;
+  --color-canvas: #f4f6f9;
+  --color-line: #e7ebf1;
+  --color-ink: #17305b;
+  --color-muted: #6b7a92;
+  --color-ok: #3ecf8e;
+  --color-warn: #f3c516;
+  --color-danger: #f0637a;
+  --radius-card: 16px;
+  --radius-pill: 20px;
+  --radius-field: 12px;
+  --font-sans: "Geist", "Geist Fallback", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Playfair Display", Georgia, serif;
+  --shadow-card: 0 10px 30px -24px rgba(16, 34, 68, 0.5);
+  --shadow-gold: 0 10px 22px -10px rgba(216, 169, 4, 0.7);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: "Geist", "Geist Fallback", ui-sans-serif, system-ui, sans-serif;
-  --font-mono: "Geist Mono", "Geist Mono Fallback", ui-monospace, monospace;
+:root {
+  --background: #f4f6f9;
+  --foreground: #17305b;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
+  margin: 0;
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 3px solid rgba(243, 197, 22, 0.5);
+  outline-offset: 2px;
+}
+
+.hero-grid {
+  background-image: radial-gradient(rgba(255, 255, 255, 0.055) 1.2px, transparent 1.2px);
+  background-size: 26px 26px;
+}
+
+.card-surface {
+  border: 1px solid #e7ebf1;
+  border-radius: 16px;
+  background: white;
+  box-shadow: 0 10px 30px -24px rgba(16, 34, 68, 0.5);
+}
+
+.field {
+  width: 100%;
+  min-height: 46px;
+  border: 1px solid #dbe1ea;
+  border-radius: 12px;
+  background: white;
+  padding: 0 14px;
+  color: #17305b;
+}
+
+.field:focus {
+  border-color: #c99a00;
+  outline: 3px solid rgba(243, 197, 22, 0.18);
+}
+
+.gold-button {
+  display: inline-flex;
+  min-height: 46px;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border-radius: 12px;
+  border: 0;
+  background: #f3c516;
+  padding: 0 22px;
+  color: #17305b;
+  font-weight: 750;
+  box-shadow: 0 10px 22px -10px rgba(216, 169, 4, 0.7);
+  cursor: pointer;
+  transition: transform 160ms ease, background-color 160ms ease;
+}
+
+.gold-button:hover {
+  background: #ffd83d;
+  transform: translateY(-1px);
+}
+
+.gold-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; }
 }

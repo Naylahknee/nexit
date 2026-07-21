@@ -1,6 +1,6 @@
 # Nexit
 
-A secure Next.js visa explorer backed by Neon Postgres. New email addresses create an account, returning users are authenticated with bcrypt, and protected country data requires a seven-day JWT.
+A responsive relocation-planning app backed by Neon Postgres. It includes onboarding, a five-step visa wizard, country discovery, a move checklist, and a monthly cost calculator.
 
 ## Setup
 
@@ -15,6 +15,8 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000).
 
+For an existing Nexit database, apply new migrations with `npm run db:migrate`.
+
 ## Checks
 
 ```bash
@@ -23,3 +25,5 @@ npm run build
 ```
 
 Visa recommendations are illustrative and are not legal advice. Confirm current eligibility rules with the relevant government authority.
+
+Country flags use free Unicode emoji, so no flag API key is required.
