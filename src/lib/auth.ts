@@ -3,8 +3,9 @@ import 'server-only'
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { SignJWT, jwtVerify, type JWTPayload } from 'jose'
+import { SESSION_COOKIE, TOKEN_AUDIENCE, TOKEN_ISSUER } from './auth-constants'
 
-export const SESSION_COOKIE = 'nexit_session'
+export { SESSION_COOKIE } from './auth-constants'
 
 export type SessionUser = { id: number; email: string }
 
@@ -17,8 +18,8 @@ function getSecret() {
 export async function createToken(payload: JWTPayload) {
   return new SignJWT(payload)
     .setProtectedHeader({ alg: 'HS256' })
-    .setIssuer('nexit')
-    .setAudience('nexit-web')
+    .setIssuer(TOKEN_ISSUER)
+    .setAudience(TOKEN_AUDIENCE)
     .setIssuedAt()
     .setExpirationTime('7d')
     .sign(getSecret())
@@ -27,8 +28,8 @@ export async function createToken(payload: JWTPayload) {
 export async function verifyToken(token: string) {
   const { payload } = await jwtVerify(token, getSecret(), {
     algorithms: ['HS256'],
-    issuer: 'nexit',
-    audience: 'nexit-web',
+    issuer: TOKEN_ISSUER,
+    audience: TOKEN_AUDIENCE,
   })
   return payload
 }

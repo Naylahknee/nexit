@@ -17,7 +17,7 @@ export default async function DashboardPage() {
 
   return (
     <div>
-      <div className="flex flex-wrap items-end justify-between gap-4"><div><p className="text-sm font-bold text-gold-deep">Your relocation overview</p><h1 className="mt-1 font-display text-3xl font-bold sm:text-4xl">Welcome back, {firstName}! 👋</h1></div><Link href="/visa-wizard" className="gold-button">Update my answers <ArrowRight size={17} /></Link></div>
+      <div className="flex flex-wrap items-end justify-between gap-4"><div><p className="text-sm font-bold text-gold-deep">Your relocation overview</p><h1 className="mt-1 font-display text-3xl font-bold sm:text-4xl">Welcome back, {firstName}! 👋</h1></div><Link href={profile.onboarding_completed ? '/visa-wizard' : '/onboarding'} className="gold-button">{profile.onboarding_completed ? 'Update my answers' : 'Personalize my plan'} <ArrowRight size={17} /></Link></div>
       <div className="mt-7 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         {[
           [Globe2, 'Countries explored', String(eligible.length || COUNTRIES.length), 'View all', '/countries'],

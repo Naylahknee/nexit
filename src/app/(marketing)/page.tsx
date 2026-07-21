@@ -39,7 +39,7 @@ export default function LandingPage() {
           <div className="relative z-0 mx-auto w-full max-w-3xl lg:translate-x-10">
             <div className="absolute -inset-10 rounded-full bg-gold/10 blur-3xl" />
             <Image src="/images/hero-airplane-window.png" alt="Tropical coast seen through an airplane window" width={1672} height={941} priority className="relative h-auto w-full rounded-[2.5rem] object-cover shadow-2xl" />
-            <Image src="/images/flight-path.png" alt="" width={1440} height={662} className="pointer-events-none absolute -bottom-12 -left-24 w-[72%] opacity-90" />
+            <Image src="/images/airplane.png" alt="" width={1440} height={662} className="pointer-events-none absolute -bottom-12 -left-24 w-[72%] opacity-90" />
           </div>
         </div>
 
