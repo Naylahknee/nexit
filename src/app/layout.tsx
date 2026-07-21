@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Playfair_Display } from "next/font/google";
+import { headers } from "next/headers";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -19,10 +20,32 @@ const playfair = Playfair_Display({
   style: ["normal", "italic"],
 });
 
-export const metadata: Metadata = {
-  title: "Nexit | Plan your life abroad",
-  description: "Find visa paths, compare destinations, plan your budget, and move abroad with confidence.",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const headerStore = await headers();
+  const host = headerStore.get("x-forwarded-host") ?? headerStore.get("host") ?? "nexit.madincrease.workers.dev";
+  const protocol = headerStore.get("x-forwarded-proto") ?? (host.startsWith("localhost") ? "http" : "https");
+  const metadataBase = new URL(`${protocol}://${host}`);
+  const title = "Nexit | Plan your life abroad";
+  const description = "Compare countries, understand visa paths, build your budget, and plan your move abroad with confidence.";
+
+  return {
+    metadataBase,
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      type: "website",
+      images: [{ url: new URL("/og.png", metadataBase), width: 1536, height: 1024, alt: "Nexit — Plan your exit. Build your next life abroad." }],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [new URL("/og.png", metadataBase)],
+    },
+  };
+}
 
 export default function RootLayout({
   children,

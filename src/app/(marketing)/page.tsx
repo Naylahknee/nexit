@@ -1,86 +1,198 @@
 import Image from 'next/image'
 import Link from 'next/link'
-import { ArrowRight, Calculator, CheckCircle2, Globe2, Sparkles } from 'lucide-react'
+import {
+  ArrowRight,
+  Calculator,
+  CheckCircle2,
+  FileCheck2,
+  Globe2,
+  MapPinned,
+  MessageCircleMore,
+  Sparkles,
+  Star,
+  UsersRound,
+} from 'lucide-react'
 import { MarketingMobileNav } from '@/components/nexit/marketing-mobile-nav'
 import { Wordmark } from '@/components/nexit/wordmark'
 
 const journey = [
-  { image: '/images/journey-globe-pins.png', title: 'Explore countries', copy: 'Compare countries, visa paths, and monthly costs side by side.', action: 'Explore options' },
-  { image: '/images/passport-visa-documents.png', title: 'Find your visa', copy: 'Answer a few questions and get a practical starting shortlist.', action: 'Get matched' },
-  { image: '/images/luggage-tropical-coast.png', title: 'Plan your move', copy: 'Track documents, budget, and the tasks that turn a plan into a departure.', action: 'Start planning' },
+  {
+    image: '/images/journey-globe-pins.png',
+    title: 'Explore countries',
+    copy: 'Compare destinations, visa paths, and monthly costs side by side.',
+    action: 'Explore options',
+  },
+  {
+    image: '/images/passport-visa-documents.png',
+    title: 'Find your visa',
+    copy: 'Answer focused questions and get a practical starting shortlist.',
+    action: 'Get matched',
+  },
+  {
+    image: '/images/luggage-tropical-coast.png',
+    title: 'Plan your move',
+    copy: 'Track documents, budget, and the tasks that turn a plan into a departure.',
+    action: 'Start planning',
+  },
+]
+
+const stats = [
+  { value: '50+', label: 'Countries', icon: Globe2 },
+  { value: '120+', label: 'Visa options', icon: FileCheck2 },
+  { value: '20K+', label: 'Planners', icon: UsersRound },
+  { value: '4.8/5', label: 'Average rating', icon: Star },
 ]
 
 export default function LandingPage() {
   return (
-    <main className="min-h-screen bg-white">
-      <section className="hero-grid relative overflow-hidden bg-navy-deep text-white">
-        <header className="relative z-20 mx-auto flex max-w-7xl items-center justify-between px-5 py-5 lg:px-8">
-          <Wordmark dark />
-          <nav className="hidden items-center gap-7 text-sm font-semibold text-white/75 md:flex" aria-label="Landing navigation">
-            <a href="#how-it-works" className="hover:text-white">How it works</a>
-            <a href="#features" className="hover:text-white">Features</a>
-            <a href="#destinations" className="hover:text-white">Destinations</a>
-            <Link href="/login" className="hover:text-white">Sign in</Link>
-            <Link href="/signup" className="gold-button !min-h-10 !px-4">Get started</Link>
-          </nav>
-          <MarketingMobileNav />
-        </header>
+    <main className="min-h-screen overflow-hidden bg-canvas">
+      <div className="mx-auto max-w-[1236px] px-4 pt-4 sm:px-6 sm:pt-6 lg:px-7">
+        <section className="hero-grid relative min-h-[660px] overflow-hidden rounded-[26px] bg-navy-deep text-white shadow-[0_28px_70px_-42px_rgba(13,27,57,.85)]">
+          <Image
+            src="/images/hero-airplane-window.png"
+            alt="Golden-hour coastline seen through an airplane window"
+            fill
+            priority
+            sizes="(min-width: 1280px) 1180px, 100vw"
+            className="object-cover object-[68%_center] sm:object-center"
+          />
+          <div className="absolute inset-0 bg-[linear-gradient(90deg,#0d1b39_0%,#0d1b39_35%,rgba(13,27,57,.82)_49%,rgba(13,27,57,.12)_76%)]" />
 
-        <div className="relative mx-auto grid min-h-[650px] max-w-7xl items-center gap-8 px-5 pb-28 pt-12 lg:grid-cols-[0.85fr_1.15fr] lg:px-8 lg:pb-32 lg:pt-16">
-          <div className="relative z-10 max-w-xl">
-            <p className="mb-5 text-sm font-bold uppercase tracking-[0.22em] text-gold">Your move, made clearer</p>
-            <h1 className="font-display text-5xl font-bold leading-[1.04] sm:text-6xl lg:text-7xl">Plan your exit.<br /><span className="italic text-gold">Build your next life abroad.</span></h1>
-            <p className="mt-7 max-w-lg text-base leading-7 text-white/72 sm:text-lg">Nexit helps you find fitting countries, understand visa paths, build a realistic budget, and keep every moving task in one place.</p>
-            <div className="mt-8 flex flex-wrap gap-3">
-              <Link href="/signup" className="gold-button">Start your plan <ArrowRight size={17} /></Link>
-              <a href="#how-it-works" className="inline-flex min-h-12 items-center rounded-xl border border-white/20 px-5 font-bold text-white hover:bg-white/5">See how it works</a>
+          <header className="relative z-20 flex items-center justify-between px-5 py-5 sm:px-8 lg:px-11">
+            <Wordmark dark />
+            <nav className="hidden items-center gap-7 text-sm font-semibold text-white/75 md:flex" aria-label="Landing navigation">
+              <a href="#how-it-works" className="transition hover:text-white">How it works</a>
+              <a href="#features" className="transition hover:text-white">Features</a>
+              <a href="#destinations" className="transition hover:text-white">Destinations</a>
+              <a href="#community" className="transition hover:text-white">Community</a>
+              <Link href="/login" className="transition hover:text-white">Sign in</Link>
+              <Link href="/signup" className="gold-button !min-h-10 !px-4">Get started</Link>
+            </nav>
+            <MarketingMobileNav />
+          </header>
+
+          <div className="relative z-10 flex min-h-[550px] items-center px-6 pb-16 pt-8 sm:px-10 lg:px-12">
+            <div className="max-w-[530px]">
+              <p className="mb-5 text-xs font-extrabold uppercase tracking-[0.24em] text-gold sm:text-sm">Your move, made clearer</p>
+              <h1 className="font-display text-[2.85rem] font-extrabold leading-[1.04] sm:text-6xl lg:text-[4.25rem]">
+                Plan your exit.<br />
+                <span className="italic text-gold">Build your next<br className="hidden sm:block" /> life abroad.</span>
+              </h1>
+              <p className="mt-6 max-w-[430px] text-base leading-7 text-[#c3d0e6]">
+                Compare countries, understand visa paths, and build a realistic move plan—without piecing it together across a dozen tabs.
+              </p>
+              <div className="mt-8 flex flex-wrap gap-3">
+                <Link href="/signup" className="gold-button">Start your plan <ArrowRight size={17} /></Link>
+                <Link href="/signup" className="inline-flex min-h-12 items-center rounded-xl border border-white/25 px-5 font-bold text-white transition hover:bg-white/8">
+                  See how it works
+                </Link>
+              </div>
             </div>
           </div>
-          <div className="relative z-0 mx-auto w-full max-w-3xl lg:translate-x-10">
-            <div className="absolute -inset-10 rounded-full bg-gold/10 blur-3xl" />
-            <Image src="/images/hero-airplane-window.png" alt="Tropical coast seen through an airplane window" width={1672} height={941} priority className="relative h-auto w-full rounded-[2.5rem] object-cover shadow-2xl" />
-            <Image src="/images/airplane.png" alt="" width={1440} height={662} className="pointer-events-none absolute -bottom-12 -left-24 w-[72%] opacity-90" />
-          </div>
-        </div>
+        </section>
 
-        <div id="features" className="absolute inset-x-0 bottom-0 z-20 mx-auto grid max-w-6xl translate-y-1/2 gap-px overflow-hidden rounded-card bg-line shadow-xl sm:grid-cols-3">
+        <section id="features" className="relative z-20 mx-3 -mt-9 grid overflow-hidden rounded-[18px] border border-line bg-white shadow-[0_20px_50px_-30px_rgba(16,34,68,.4)] sm:mx-8 sm:grid-cols-3">
           {[
             [Sparkles, 'Find your best visa', 'Smart matching based on your profile'],
-            [Calculator, 'Plan your budget', 'Understand realistic monthly costs'],
-            [CheckCircle2, 'Move with confidence', 'A checklist that keeps you on track'],
-          ].map(([Icon, title, copy]) => (
-            <div key={String(title)} className="flex items-center gap-4 bg-white px-5 py-5 text-navy">
-              <span className="grid size-11 shrink-0 place-items-center rounded-full bg-gold-soft"><Icon size={20} /></span>
-              <div><p className="text-sm font-extrabold">{String(title)}</p><p className="mt-0.5 text-xs text-muted">{String(copy)}</p></div>
+            [Calculator, 'Plan your budget', 'Understand realistic costs before you move'],
+            [CheckCircle2, 'Move with confidence', 'A step-by-step checklist that stays on track'],
+          ].map(([Icon, title, copy], index) => (
+            <div key={String(title)} className={`flex items-center gap-4 px-5 py-5 sm:px-7 sm:py-6 ${index ? 'border-t border-line sm:border-l sm:border-t-0' : ''}`}>
+              <span className="grid size-11 shrink-0 place-items-center rounded-xl bg-gold-soft text-gold-deep"><Icon size={20} /></span>
+              <div><p className="text-sm font-extrabold text-navy">{String(title)}</p><p className="mt-1 text-xs leading-5 text-muted">{String(copy)}</p></div>
+            </div>
+          ))}
+        </section>
+
+        <section id="how-it-works" className="pb-20 pt-24 sm:pt-28">
+          <div className="text-center">
+            <p className="text-xs font-extrabold uppercase tracking-[0.22em] text-gold-deep">A practical path forward</p>
+            <h2 className="mt-3 font-display text-4xl font-extrabold text-navy sm:text-5xl">Your journey to freedom starts here</h2>
+            <div className="mx-auto mt-5 h-1 w-16 rounded-full bg-gold" />
+          </div>
+
+          <div id="destinations" className="mt-11 grid gap-5 md:grid-cols-3">
+            {journey.map((item) => (
+              <article key={item.title} className="group overflow-hidden rounded-[20px] border border-line bg-white shadow-card">
+                <div className="relative aspect-[4/3] overflow-hidden bg-canvas">
+                  <Image src={item.image} alt="" fill sizes="(min-width: 768px) 33vw, 100vw" className="object-cover transition duration-500 group-hover:scale-[1.025]" />
+                </div>
+                <div className="p-6">
+                  <h3 className="text-xl font-extrabold text-navy">{item.title}</h3>
+                  <p className="mt-2 min-h-12 text-sm leading-6 text-muted">{item.copy}</p>
+                  <Link href="/signup" className="mt-5 inline-flex items-center gap-2 text-sm font-extrabold text-gold-deep">{item.action}<ArrowRight size={15} /></Link>
+                </div>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <section className="pb-16">
+          <div className="relative grid min-h-44 items-center overflow-hidden rounded-[26px] bg-navy px-7 py-8 text-white sm:grid-cols-[120px_1fr_210px] sm:px-10">
+            <div className="hidden size-24 rounded-full border-[3px] border-gold/60 sm:block" aria-hidden />
+            <div className="relative z-10">
+              <blockquote className="font-display text-2xl font-bold italic leading-relaxed sm:text-[1.65rem]">
+                “Nexit gave me a clear plan and the confidence to finally make my move. Best decision ever!”
+              </blockquote>
+              <p className="mt-4 text-sm font-extrabold text-gold">— Maya R., Bali, Indonesia</p>
+            </div>
+            <Image src="/images/airplane.png" alt="" width={440} height={278} className="pointer-events-none absolute -right-5 bottom-0 w-64 opacity-65 brightness-0 invert sm:relative sm:right-auto sm:w-[210px]" />
+          </div>
+        </section>
+      </div>
+
+      <section className="w-full bg-navy-deep py-10 text-white" aria-label="Nexit at a glance">
+        <div className="mx-auto grid max-w-[1180px] grid-cols-2 gap-y-9 px-5 text-center md:grid-cols-4 lg:px-0">
+          {stats.map(({ value, label, icon: Icon }, index) => (
+            <div key={label} className={`px-4 ${index % 2 ? '' : 'border-r border-white/10'} md:border-r md:last:border-r-0`}>
+              <Icon className="mx-auto text-gold" size={25} fill={label === 'Average rating' ? 'currentColor' : 'none'} />
+              <p className="mt-3 font-display text-3xl font-extrabold">{value}</p>
+              <p className="mt-1 text-xs font-semibold text-[#9fb2d1]">{label}</p>
             </div>
           ))}
         </div>
       </section>
 
-      <section id="how-it-works" className="mx-auto max-w-6xl px-5 pb-20 pt-32 lg:px-8">
-        <div className="text-center"><p className="text-sm font-bold uppercase tracking-[0.2em] text-gold-deep">A path you can follow</p><h2 className="mt-3 font-display text-4xl font-bold text-navy">Your journey to freedom starts here</h2></div>
-        <div id="destinations" className="mt-12 grid gap-6 md:grid-cols-3">
-          {journey.map((item) => (
-            <article key={item.title} className="card-surface overflow-hidden">
-              <div className="relative aspect-[4/3] overflow-hidden bg-canvas"><Image src={item.image} alt="" fill loading="eager" sizes="(min-width: 768px) 33vw, 100vw" className="object-cover" /></div>
-              <div className="p-6"><h3 className="text-xl font-extrabold text-navy">{item.title}</h3><p className="mt-2 min-h-12 text-sm leading-6 text-muted">{item.copy}</p><Link href="/signup" className="mt-5 inline-flex items-center gap-2 text-sm font-extrabold text-gold-deep">{item.action}<ArrowRight size={15} /></Link></div>
+      <section id="community" className="mx-auto max-w-[1236px] px-4 py-20 sm:px-6 lg:px-7">
+        <div className="mb-9 max-w-2xl">
+          <p className="text-xs font-extrabold uppercase tracking-[0.22em] text-teal-deep">Community insight, built in</p>
+          <h2 className="mt-3 font-display text-4xl font-extrabold text-navy sm:text-5xl">Join our community of Nexiters</h2>
+          <p className="mt-4 text-base leading-7 text-muted">Connect with people planning real international moves, compare practical notes, and make decisions with better context.</p>
+        </div>
+
+        <div className="grid gap-5 lg:grid-cols-12">
+          <article className="relative min-h-80 overflow-hidden rounded-[24px] bg-teal-deep p-7 text-white lg:col-span-7 sm:p-10">
+            <div className="absolute -right-16 -top-20 size-72 rounded-full border-[48px] border-white/8" />
+            <UsersRound size={34} className="text-teal-soft" />
+            <h3 className="mt-10 max-w-lg font-display text-3xl font-extrabold sm:text-4xl">A place for the questions that don’t fit on an application form.</h3>
+            <p className="mt-4 max-w-xl text-sm leading-6 text-white/75">Learn from people researching neighborhoods, paperwork, budgets, healthcare, and the everyday reality of starting again somewhere new.</p>
+            <Link href="/signup" className="gold-button mt-7">Join the Nexiters <ArrowRight size={17} /></Link>
+          </article>
+
+          <div className="grid gap-5 lg:col-span-5">
+            <article className="rounded-[24px] border border-line bg-white p-7 shadow-card">
+              <span className="grid size-12 place-items-center rounded-xl bg-teal-soft text-teal-deep"><MessageCircleMore size={22} /></span>
+              <h3 className="mt-6 text-xl font-extrabold text-navy">Country conversations</h3>
+              <p className="mt-2 text-sm leading-6 text-muted">Trade grounded, location-specific insight with people considering the same move.</p>
             </article>
-          ))}
+            <article className="rounded-[24px] border border-line bg-white p-7 shadow-card">
+              <span className="grid size-12 place-items-center rounded-xl bg-teal-soft text-teal-deep"><MapPinned size={22} /></span>
+              <h3 className="mt-6 text-xl font-extrabold text-navy">Real relocation notes</h3>
+              <p className="mt-2 text-sm leading-6 text-muted">See what planners are learning about documents, costs, housing, and arrival logistics.</p>
+            </article>
+          </div>
         </div>
       </section>
 
-      <section className="mx-auto max-w-6xl px-5 pb-16 lg:px-8">
-        <div className="grid overflow-hidden rounded-[22px] bg-navy-deep text-white md:grid-cols-[1fr_1.2fr]">
-          <div className="p-8 sm:p-12"><Globe2 className="text-gold" size={32} /><blockquote className="mt-6 font-display text-2xl leading-relaxed">“Nexit gave me a clear plan and the confidence to finally make my move.”</blockquote><p className="mt-5 text-sm text-white/60">— Maya R., Bali, Indonesia</p></div>
-          <div className="relative min-h-64"><Image src="/images/dashboard-beach-banner.png" alt="Sunlit tropical coast" fill loading="eager" sizes="(min-width: 768px) 55vw, 100vw" className="object-cover" /><div className="absolute inset-0 bg-gradient-to-r from-navy-deep via-navy-deep/30 to-transparent" /></div>
+      <footer className="relative w-full overflow-hidden bg-navy-deep text-white">
+        <Image src="/images/footer-beach-ocean.png" alt="Golden beach and ocean at sunset" width={2172} height={724} className="h-72 w-full object-cover opacity-65" />
+        <div className="absolute inset-0 flex items-center bg-gradient-to-r from-navy-deep via-navy-deep/78 to-navy-deep/20">
+          <div className="mx-auto w-full max-w-[1180px] px-5">
+            <h2 className="max-w-xl font-display text-4xl font-extrabold">Your next chapter deserves a real plan.</h2>
+            <p className="mt-3 text-white/75">Compare clearly. Prepare practically. Move with confidence.</p>
+            <Link href="/signup" className="gold-button mt-6">Start your plan <ArrowRight size={17} /></Link>
+          </div>
         </div>
-      </section>
-
-      <section className="bg-navy py-10 text-white"><div className="mx-auto grid max-w-6xl grid-cols-2 gap-8 px-5 text-center md:grid-cols-4 lg:px-8">{[['50+', 'Countries'], ['120+', 'Visa options'], ['20K+', 'Planners'], ['4.8/5', 'Average rating']].map(([value, label]) => <div key={label}><p className="text-3xl font-extrabold">{value}</p><p className="mt-1 text-sm text-white/60">{label}</p></div>)}</div></section>
-
-      <footer className="relative overflow-hidden bg-navy-deep text-white">
-        <Image src="/images/footer-beach-ocean.png" alt="Golden beach and ocean at sunset" width={2172} height={724} loading="eager" className="h-72 w-full object-cover opacity-75" />
-        <div className="absolute inset-0 flex items-center bg-gradient-to-r from-navy-deep via-navy-deep/65 to-transparent"><div className="mx-auto w-full max-w-6xl px-5 lg:px-8"><h2 className="max-w-xl font-display text-4xl font-bold">Your next adventure is waiting.</h2><p className="mt-3 text-white/75">Plan smart. Move with confidence. Live your freedom.</p><Link href="/signup" className="gold-button mt-6">Let&apos;s go <ArrowRight size={17} /></Link></div></div>
         <div className="border-t border-white/10 px-5 py-5 text-center text-xs text-white/55">© 2026 Nexit. Visa recommendations are planning guidance, not legal advice.</div>
       </footer>
     </main>
