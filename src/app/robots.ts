@@ -7,8 +7,8 @@ export default function robots(): MetadataRoute.Robots {
       userAgent: '*',
       allow: '/',
       disallow: [
-        '/api/', '/onboarding', '/dashboard', '/nexitnation', '/visa-wizard',
-        '/countries', '/checklist', '/cost-calculator', '/documents', '/settings',
+        '/api/', '/onboarding', '/welcome', '/profile-wizard', '/dashboard', '/nexitnation', '/pathways', '/visa-wizard',
+        '/countries', '/nexit-plan', '/checklist', '/cost-calculator', '/greenbook', '/community', '/saved', '/documents', '/settings',
       ],
     },
     sitemap: absoluteUrl('/sitemap.xml'),

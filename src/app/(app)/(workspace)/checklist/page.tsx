@@ -1,8 +1,5 @@
-import { MoveChecklist } from '@/components/nexit/checklist'
-import { requireCurrentUser } from '@/lib/auth'
-import { getProfile } from '@/lib/profile'
+import { redirect } from 'next/navigation'
 
-export default async function ChecklistPage() {
-  const user = await requireCurrentUser()
-  return <MoveChecklist initial={await getProfile(user.id)} />
+export default function ChecklistCompatibilityPage() {
+  redirect('/nexit-plan#checklist')
 }

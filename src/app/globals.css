@@ -183,6 +183,13 @@ textarea:focus-visible {
   border-radius: 12px !important;
 }
 
+.nexit-region { cursor: pointer; }
+.nexit-region-image { transform-box: fill-box; transform-origin: center; animation: nexit-region-drift 18s ease-in-out infinite alternate; }
+.nexit-region-outline { transition: filter 180ms ease, fill-opacity 180ms ease, stroke-width 180ms ease; }
+.nexit-region:hover .nexit-region-outline,
+.nexit-region:focus .nexit-region-outline { filter: drop-shadow(0 0 10px rgba(243, 197, 22, .9)); fill-opacity: .28; stroke-width: 5; }
+@keyframes nexit-region-drift { from { transform: scale(1.01) translateX(-.5%); } to { transform: scale(1.08) translateX(.5%); } }
+
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; }

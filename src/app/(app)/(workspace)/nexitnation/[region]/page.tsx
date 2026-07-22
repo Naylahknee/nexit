@@ -5,6 +5,8 @@ import { notFound } from 'next/navigation'
 import { ArrowRight, ChevronRight } from 'lucide-react'
 import { PassportIndexLink } from '@/components/nexit/PassportIndexLink'
 import { requireCurrentUser } from '@/lib/auth'
+import { getProfile } from '@/lib/profile'
+import { calculateRegionMatches } from '@/lib/userProfile'
 import { NEXIT_LEXICON } from '@/lib/lexicon'
 import { isNexitnationRegion, regionList, regions } from '@/lib/nexitnation-data'
 
@@ -34,7 +36,9 @@ export default async function NextinationRegionPage({ params }: RegionPageProps)
   const { region: slug } = await params
   if (!isNexitnationRegion(slug)) notFound()
 
-  await requireCurrentUser()
+  const user = await requireCurrentUser()
+  const profile = await getProfile(user.id)
+  const matches = calculateRegionMatches(profile)
   const region = regions[slug]
 
   return (
@@ -60,7 +64,7 @@ export default async function NextinationRegionPage({ params }: RegionPageProps)
           <h1 className="mt-2 font-display text-5xl font-bold">{region.name}</h1>
           <p className="mt-4 max-w-xl leading-7 text-white/80">{region.description}</p>
           <div className="mt-6 flex flex-wrap gap-2">
-            <span className="rounded-pill border border-gold/45 bg-gold/12 px-3 py-1.5 text-xs font-bold text-gold">{region.matchLabel}</span>
+            <span className="rounded-pill border border-gold/45 bg-gold/12 px-3 py-1.5 text-xs font-bold text-gold">{matches ? `Nexit Match ${matches[slug]}%` : 'Complete your profile to see your match'}</span>
             <span className="rounded-pill border border-white/20 bg-black/20 px-3 py-1.5 text-xs backdrop-blur">{region.countryCount} countries</span>
             {region.indicators.map((indicator) => (
               <span key={indicator} className="rounded-pill border border-white/20 bg-black/20 px-3 py-1.5 text-xs backdrop-blur">{indicator}</span>
@@ -72,8 +76,8 @@ export default async function NextinationRegionPage({ params }: RegionPageProps)
       <section className="py-10">
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div>
-            <p className="text-sm font-semibold text-gold-deep">Personalized for your Nexit Profile</p>
-            <h2 className="mt-1 font-display text-3xl font-bold text-navy">Top Nextinations for you</h2>
+            <p className="text-sm font-semibold text-gold-deep">{matches ? 'Personalized from your Nexit Profile' : 'General region research'}</p>
+            <h2 className="mt-1 font-display text-3xl font-bold text-navy">Nextinations in {region.name}</h2>
           </div>
           <Link href="/countries" className="text-sm font-semibold text-navy transition hover:text-gold-deep">View all Nextinations</Link>
         </div>
@@ -88,7 +92,7 @@ export default async function NextinationRegionPage({ params }: RegionPageProps)
                 <div className="p-5">
                   <h3 className="text-lg font-extrabold text-navy">{country.name}</h3>
                   <p className="text-sm text-muted">{country.city}</p>
-                  <p className="mt-4 text-xl font-bold text-ok">{NEXIT_LEXICON.matchScore}: {country.matchScore}%</p>
+                  {matches ? <p className="mt-4 text-xl font-bold text-ok">Regional {NEXIT_LEXICON.matchScore}: {matches[slug]}%</p> : <p className="mt-4 text-sm font-bold text-muted">Complete your Nexit Profile to see personalized matches.</p>}
                   <dl className="mt-4 space-y-2 text-sm">
                     <div><dt className="text-muted">{NEXIT_LEXICON.pathways}</dt><dd className="font-semibold text-navy">{country.pathway}</dd></div>
                     <div className="flex justify-between gap-3"><dt className="text-muted">{NEXIT_LEXICON.communityFit}</dt><dd className="font-semibold text-navy">{country.communityFit}</dd></div>
@@ -112,7 +116,7 @@ export default async function NextinationRegionPage({ params }: RegionPageProps)
           <p className="text-sm font-semibold text-gold-deep">{NEXIT_LEXICON.pathways}</p>
           <h2 className="mt-1 font-display text-2xl font-bold text-navy">Residency options matched to you</h2>
           <p className="mt-3 text-muted">Review visa, residency, work, retirement, and study Pathways based on your Nexit Profile.</p>
-          <Link href="/visa-wizard" className="mt-5 inline-flex rounded-field bg-navy px-5 py-3 text-sm font-semibold text-white transition hover:bg-navy-deep">Review my Pathways</Link>
+          <Link href={matches ? '/pathways' : '/profile-wizard'} className="mt-5 inline-flex rounded-field bg-navy px-5 py-3 text-sm font-semibold text-white transition hover:bg-navy-deep">{matches ? 'Review my Pathways' : 'Start Nexit Profile Wizard'}</Link>
         </article>
 
         <article className="rounded-card border border-line bg-white p-6 shadow-card">
@@ -133,7 +137,7 @@ export default async function NextinationRegionPage({ params }: RegionPageProps)
             <p className="text-sm font-semibold text-gold">Your {NEXIT_LEXICON.plan}</p>
             <h2 className="mt-1 font-display text-3xl font-bold">Save, compare, and build your relocation plan.</h2>
           </div>
-          <Link href="/checklist" className="gold-button mt-5 sm:mt-0">{NEXIT_LEXICON.executionCta} <ArrowRight size={16} /></Link>
+          <Link href="/nexit-plan" className="gold-button mt-5 sm:mt-0">{NEXIT_LEXICON.executionCta} <ArrowRight size={16} /></Link>
         </div>
       </section>
     </div>

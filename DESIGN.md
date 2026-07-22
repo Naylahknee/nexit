@@ -35,7 +35,7 @@ References guide appearance, spacing, composition, and mood. Rebuild them as acc
 
 ### Layer 3 — UX patterns (semi-locked)
 
-- The Pathways Wizard presents one primary question per step.
+- The Nexit Profile Wizard presents one primary question per step.
 - The dashboard is structured and action-oriented, not an open-ended discovery surface.
 - Mobile screens prioritize one primary action.
 - Interfaces must not become cluttered, form-heavy, or multi-action without review.
@@ -43,7 +43,7 @@ References guide appearance, spacing, composition, and mood. Rebuild them as acc
 ### Layer 4 — Feature structure (flexible)
 
 - Greenbook Insights
-- Pathways Wizard
+- Nexit Profile Wizard and Nexit Pathways output
 - Nexitnation and Nextination evaluation
 - Nexit Tracker
 - Cost calculator and document tools
@@ -205,6 +205,7 @@ Approved production assets live in `public/brand/`. Scene imagery remains in `pu
 | --- | --- | --- | --- | --- |
 | Light-surface wordmark | `nexit-wordmark-light.png` | `6.png` | White cards, auth, and light mobile headers | Integrated |
 | Dark-surface wordmark | `nexit-wordmark-dark.png` | `5.png` | Hero, sidebar, SEO header, and footers | Integrated |
+| Butterfly wordmark | `nexit-butterfly-wordmark.png` | `3.png` | Protected workspace sidebar | Integrated |
 | Split wordmark alternate | `nexit-wordmark-split.png` | `7.png` | Retained alternate; no default placement | Approved |
 | High-resolution wordmark | `nexit-wordmark-master-light.png` | `NEXIT WORD LOGO.png` | Owner-approved master reference | Approved |
 | Primary butterfly globe | `nexit-primary-dark.png` | `Nexit Logo dark bg.png` | Detailed dark-background identity asset | Approved |
@@ -289,10 +290,10 @@ Component filenames may preserve compatibility, but user-facing names follow the
 | `Sidebar` | Workspace navigation | Navy; active item may use Gold |
 | `TopBar` | Search, alerts, and account controls | Keep compact and task-oriented |
 | `BottomNav` | Responsive workspace navigation | Five or fewer primary destinations |
-| `VisaWizardStep` | Pathways Wizard step | One primary question per step |
+| `ProfileWizardStep` | Nexit Profile Wizard step | One primary question per step |
 | `CtaBanner` | Nexicution Mode action | One primary CTA |
 
-Legacy implementation terms such as `CountryTile`, `VisaWizardStep`, and the `/visa-wizard` URL may remain in code for compatibility. Do not expose those legacy terms as new product language.
+Legacy URLs such as `/visa-wizard` and `/checklist` may remain as redirects for compatibility. Do not expose them as permanent product navigation.
 
 ## 9. Application routes
 
@@ -325,16 +326,23 @@ Public SEO slugs:
 
 ```text
 src/app/(app)/
-  onboarding/page.tsx
+  welcome/page.tsx
+  profile-wizard/page.tsx
+  onboarding/page.tsx                  → compatibility redirect
   (workspace)/
     dashboard/page.tsx
     nexitnation/page.tsx
     nexitnation/[region]/page.tsx
-    visa-wizard/page.tsx
+    pathways/page.tsx
+    nexit-plan/page.tsx
+    visa-wizard/page.tsx                → compatibility redirect
     countries/page.tsx
     countries/[slug]/page.tsx
     checklist/page.tsx
     cost-calculator/page.tsx
+    greenbook/page.tsx
+    community/page.tsx
+    saved/page.tsx
     documents/page.tsx
     settings/page.tsx
 ```
@@ -343,17 +351,22 @@ Approved UI labels:
 
 - `/nexitnation` → **Choose Your Nexitnation**
 - `/nexitnation/[region]` → **Explore This Nextination**
-- `/visa-wizard` → **Pathways Wizard**
+- `/profile-wizard` → **Nexit Profile Wizard**
+- `/pathways` → **Nexit Pathways**
+- `/nexit-plan` → **Nexit Plan**
 - `/countries` → **Nextinations**
 - `/checklist` → **Nexit Tracker**
+- `/greenbook` → **Greenbook Insights**
+- `/community` → **Nexiters Community**
+- `/saved` → **Saved Nextinations**
 
 Keep `/countries`, `/visa-wizard`, and `/checklist` URLs for compatibility unless a separate migration is approved.
 
 ### Nexitnation interaction
 
-- `/nexitnation` uses Mapbox GL with local polygon data from `public/data/continents.geojson`.
-- Every region feature exposes `slug`, `label`, `countryCount`, and `matchLabel`.
-- Desktop uses hover and click states on the region polygons; mobile uses the same six regions as accessible image cards.
+- `/nexitnation` uses a responsive illustrated SVG world map with six accessible region links, image `clipPath` masks, Navy overlays, Gold outlines, and restrained motion.
+- The main discovery map must not require Mapbox or a client token. Mapbox remains available for detailed country, city, neighborhood, and Greenbook location maps.
+- Before profile completion, maps and cards show **Complete your Nexit Profile to see personalized matches** and never substitute a static score or match label.
 - A region selection routes to `/nexitnation/[region]`; the map does not replace the protected App Shell.
 - Region pages use the typed registry in `src/lib/nexitnation-data.ts` and retain **Match Score**, **Pathways**, **Community Fit**, and **Explore This Nextination** language.
 - Passport Index is an outbound research resource only. Never scrape, embed, proxy, or reproduce its passport-strength and mobility data.
@@ -368,8 +381,11 @@ Keep `/countries`, `/visa-wizard`, and `/checklist` URLs for compatibility unles
 - Logged-out access to an intended protected route uses `/signup?next=<safe-internal-route>` or `/login?next=<safe-internal-route>`.
 - Preserve validated internal `next` paths through signup and login.
 - Reject absolute external URLs, protocol-relative URLs beginning with `//`, backslashes, and control characters.
-- The `(app)` workspace is protected by `src/middleware.ts` and server-side layout validation. Keep both layers.
-- After authentication, continue to the validated internal `next` path; use `/dashboard` as the fallback.
+- The `(app)` workspace is protected by the Next.js 16 `src/proxy.ts` convention and server-side layout validation. Keep both layers.
+- New accounts continue to `/welcome`. Users may start `/profile-wizard` or skip to `/nexitnation` without placeholder profile values.
+- Completing the wizard persists the real Nexit Profile and continues to `/pathways`.
+- Existing sign-ins continue to the validated internal `next` path; use `/dashboard` as the fallback.
+- Empty personal fields remain `NULL` in Neon until the user supplies them.
 
 ## 11. Imagery system
 

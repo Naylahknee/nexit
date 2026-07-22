@@ -2,7 +2,6 @@ export type CountryPreview = {
   name: string
   slug: string
   city: string
-  matchScore: number
   monthlyCost: number
   pathway: string
   communityFit: string
@@ -13,7 +12,6 @@ export type RegionConfig = {
   slug: RegionSlug
   name: string
   countryCount: number
-  matchLabel: string
   center: [number, number]
   zoom: number
   image: string
@@ -38,7 +36,6 @@ export const regions: Record<RegionSlug, RegionConfig> = {
     slug: 'europe',
     name: 'Europe',
     countryCount: 32,
-    matchLabel: 'Excellent Match',
     center: [15, 51],
     zoom: 3.2,
     image: '/images/regions/europe.webp',
@@ -50,7 +47,6 @@ export const regions: Record<RegionSlug, RegionConfig> = {
         name: 'Portugal',
         slug: 'portugal',
         city: 'Lisbon',
-        matchScore: 92,
         monthlyCost: 2100,
         pathway: 'Digital Nomad Pathway',
         communityFit: 'Strong',
@@ -60,7 +56,6 @@ export const regions: Record<RegionSlug, RegionConfig> = {
         name: 'Spain',
         slug: 'spain',
         city: 'Barcelona',
-        matchScore: 88,
         monthlyCost: 2300,
         pathway: 'Digital Nomad Pathway',
         communityFit: 'Strong',
@@ -70,7 +65,6 @@ export const regions: Record<RegionSlug, RegionConfig> = {
         name: 'Greece',
         slug: 'greece',
         city: 'Athens',
-        matchScore: 85,
         monthlyCost: 2000,
         pathway: 'Digital Nomad Pathway',
         communityFit: 'Moderate',
@@ -80,7 +74,6 @@ export const regions: Record<RegionSlug, RegionConfig> = {
         name: 'Estonia',
         slug: 'estonia',
         city: 'Tallinn',
-        matchScore: 83,
         monthlyCost: 1800,
         pathway: 'Digital Nomad Pathway',
         communityFit: 'Moderate',
@@ -92,7 +85,6 @@ export const regions: Record<RegionSlug, RegionConfig> = {
     slug: 'africa',
     name: 'Africa',
     countryCount: 54,
-    matchLabel: 'Great Match',
     center: [20, 3],
     zoom: 2.6,
     image: '/images/regions/africa.webp',
@@ -105,7 +97,6 @@ export const regions: Record<RegionSlug, RegionConfig> = {
     slug: 'asia',
     name: 'Asia',
     countryCount: 49,
-    matchLabel: 'Good Match',
     center: [95, 34],
     zoom: 2.4,
     image: '/images/regions/asia.webp',
@@ -118,7 +109,6 @@ export const regions: Record<RegionSlug, RegionConfig> = {
     slug: 'north-america',
     name: 'North America',
     countryCount: 14,
-    matchLabel: 'Good Match',
     center: [-105, 43],
     zoom: 2.5,
     image: '/images/regions/north-america.webp',
@@ -131,7 +121,6 @@ export const regions: Record<RegionSlug, RegionConfig> = {
     slug: 'latin-america',
     name: 'Latin America',
     countryCount: 21,
-    matchLabel: 'Great Match',
     center: [-64, -17],
     zoom: 2.5,
     image: '/images/regions/latin-america.webp',
@@ -144,7 +133,6 @@ export const regions: Record<RegionSlug, RegionConfig> = {
     slug: 'oceania',
     name: 'Oceania',
     countryCount: 8,
-    matchLabel: 'Excellent Match',
     center: [145, -25],
     zoom: 3,
     image: '/images/regions/oceania.webp',
