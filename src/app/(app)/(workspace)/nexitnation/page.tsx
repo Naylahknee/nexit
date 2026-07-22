@@ -12,7 +12,6 @@ export const metadata: Metadata = {
 export default async function NexitnationPage() {
   const user = await requireCurrentUser()
   const profile = await loadNexitnationProfile(user.id, user.email)
-  const household = profile.familySize === 1 ? 'Solo planner' : `${profile.familySize}-person household`
 
   return (
     <div>
@@ -22,17 +21,11 @@ export default async function NexitnationPage() {
           {NEXIT_LEXICON.mapTitle}
         </h1>
         <p className="mt-2 max-w-2xl text-muted">
-          Compare regions through your budget, work setup, priorities, and Community Fit. Select a region to open its Nextination page.
+          Select an illustrated region to open its Nextination page. Mapbox remains available for detailed country and local maps.
         </p>
       </header>
 
-      <NexitnationMap
-        profile={{
-          budget: profile.monthlyIncome,
-          remoteWorker: profile.remote,
-          household,
-        }}
-      />
+      <NexitnationMap profile={{ complete: profile !== null, matches: profile?.regionMatches ?? null }} />
     </div>
   )
 }

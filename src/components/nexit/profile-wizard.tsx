@@ -1,0 +1,159 @@
+'use client'
+
+import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+import { useState } from 'react'
+import { ArrowLeft, ArrowRight, Check, LoaderCircle } from 'lucide-react'
+import type { PathwayGoal, RelocationProfile, WizardStatus } from '@/lib/profile'
+
+const incomeTypes = ['Employment', 'Self-employment', 'Pension', 'Investments', 'Mixed', 'Other'] as const
+const educationLevels = ['Secondary school', 'Associate degree', 'Bachelor’s degree', 'Master’s degree', 'Doctorate', 'Professional credential', 'Other'] as const
+const householdTypes = ['Solo', 'Couple', 'Family', 'Other'] as const
+const regions = ['North America', 'Latin America', 'Europe', 'Africa', 'Asia', 'Oceania', 'Open to anywhere'] as const
+const timelines = ['0-3 months', '3-6 months', '6-12 months', '12+ months', 'Just researching'] as const
+const goals: PathwayGoal[] = ['Remote Work', 'Employment', 'Entrepreneurship', 'Passive Income / Retirement', 'Education', 'Family Reunification', 'Ancestry', 'Investment']
+
+export function ProfileWizard({ initial }: { initial: RelocationProfile }) {
+  const router = useRouter()
+  const [step, setStep] = useState(0)
+  const [profile, setProfile] = useState(initial)
+  const [saving, setSaving] = useState(false)
+  const [error, setError] = useState('')
+  const isRetake = initial.wizard_status === 'completed'
+
+  function update<K extends keyof RelocationProfile>(key: K, value: RelocationProfile[K]) {
+    setProfile((current) => ({ ...current, [key]: value }))
+  }
+
+  function payload(wizardStatus: WizardStatus) {
+    return {
+      wizard_status: wizardStatus,
+      display_name: profile.display_name,
+      citizenship: profile.citizenship,
+      current_country: profile.current_country,
+      monthly_income: profile.monthly_income,
+      annual_income: profile.annual_income,
+      income_type: profile.income_type,
+      remote: profile.remote,
+      occupation: profile.occupation,
+      credentials: profile.credentials,
+      education: profile.education,
+      savings: profile.savings,
+      household_type: profile.household_type,
+      family_size: profile.family_size,
+      spouse: profile.spouse,
+      dependents: profile.dependents,
+      ancestry_connections: profile.ancestry_connections,
+      preferred_regions: profile.preferred_regions,
+      preferred_region: profile.preferred_regions[0] ?? null,
+      timeline: profile.timeline,
+      goals: profile.goals,
+      completed_at: wizardStatus === 'completed' ? new Date().toISOString() : profile.completed_at,
+    }
+  }
+
+  async function persist(wizardStatus: WizardStatus) {
+    const response = await fetch('/api/profile', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload(wizardStatus)),
+    })
+    const result = await response.json()
+    if (!response.ok) throw new Error(result.error ?? 'Unable to save your Nexit Profile.')
+  }
+
+  function canContinue() {
+    if (step === 0) return Boolean(profile.display_name?.trim() && profile.citizenship?.trim() && profile.current_country?.trim())
+    if (step === 1) return profile.monthly_income !== null && profile.annual_income !== null && Boolean(profile.income_type)
+    if (step === 2) return profile.remote !== null && Boolean(profile.occupation?.trim())
+    if (step === 3) return Boolean(profile.education && profile.goals.length)
+    if (step === 4) return profile.savings !== null
+    if (step === 5) return Boolean(profile.household_type && profile.family_size !== null && profile.spouse !== null && profile.dependents !== null)
+    if (step === 6) return profile.ancestry_connections === 'None known' || Boolean(profile.ancestry_connections?.trim())
+    return Boolean(profile.preferred_regions.length && profile.timeline)
+  }
+
+  async function next() {
+    if (!canContinue()) return
+    setSaving(true)
+    setError('')
+    try {
+      await persist(isRetake ? 'completed' : 'in_progress')
+      setStep((current) => current + 1)
+    } catch (reason) {
+      setError(reason instanceof Error ? reason.message : 'Unable to save your progress.')
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  async function finish() {
+    if (!canContinue()) return
+    setSaving(true)
+    setError('')
+    try {
+      await persist('completed')
+      router.push('/pathways')
+      router.refresh()
+    } catch (reason) {
+      setError(reason instanceof Error ? reason.message : 'Unable to complete your Nexit Profile.')
+      setSaving(false)
+    }
+  }
+
+  async function skip() {
+    setSaving(true)
+    setError('')
+    try {
+      await persist('skipped')
+      router.push('/nexitnation')
+      router.refresh()
+    } catch (reason) {
+      setError(reason instanceof Error ? reason.message : 'Unable to continue right now.')
+      setSaving(false)
+    }
+  }
+
+  const panels = [
+    <section key="identity"><StepLabel step={1} title="Where are you starting from?" copy="Your citizenship and current residence affect which Pathways can be researched." /><div className="mt-7 grid gap-5 sm:grid-cols-2"><TextField label="What should we call you?" value={profile.display_name} onChange={(value) => update('display_name', value)} /><TextField label="Citizenship" value={profile.citizenship} onChange={(value) => update('citizenship', value)} /><TextField label="Current country of residence" value={profile.current_country} onChange={(value) => update('current_country', value)} /></div></section>,
+    <section key="income"><StepLabel step={2} title="What income can support your move?" copy="Enter actual planning figures. Nexit never inserts a sample budget." /><div className="mt-7 grid gap-5 sm:grid-cols-2"><NumberField label="Monthly income (USD)" value={profile.monthly_income} onChange={(value) => update('monthly_income', value)} /><NumberField label="Annual income (USD)" value={profile.annual_income} onChange={(value) => update('annual_income', value)} /><SelectField label="Primary income type" value={profile.income_type} options={incomeTypes} onChange={(value) => update('income_type', value)} /></div></section>,
+    <section key="work"><StepLabel step={3} title="How do you work?" copy="Work status, occupation, and credentials shape employment and remote-work research." /><div className="mt-7"><p className="text-sm font-bold">Can your current work be performed remotely?</p><div className="mt-3 grid grid-cols-2 gap-3"><Choice active={profile.remote === true} onClick={() => update('remote', true)}>Yes</Choice><Choice active={profile.remote === false} onClick={() => update('remote', false)}>No</Choice></div></div><div className="mt-5 grid gap-5 sm:grid-cols-2"><TextField label="Occupation" value={profile.occupation} onChange={(value) => update('occupation', value)} /><TextField label="Licenses or credentials (optional)" value={profile.credentials} onChange={(value) => update('credentials', value)} /></div></section>,
+    <section key="goals"><StepLabel step={4} title="Which Pathways should Nexit evaluate?" copy="Select every category that fits how you may qualify." /><div className="mt-7 grid gap-3 sm:grid-cols-2">{goals.map((goal) => <Choice key={goal} active={profile.goals.includes(goal)} onClick={() => update('goals', profile.goals.includes(goal) ? profile.goals.filter((item) => item !== goal) : [...profile.goals, goal])}>{goal}</Choice>)}</div><div className="mt-5"><SelectField label="Highest education or credential" value={profile.education} options={educationLevels} onChange={(value) => update('education', value)} /></div></section>,
+    <section key="savings"><StepLabel step={5} title="What savings are available?" copy="Savings may affect investment, education, passive-income, and arrival-cost planning." /><div className="mt-8 max-w-sm"><NumberField label="Available relocation savings (USD)" value={profile.savings} onChange={(value) => update('savings', value)} /></div></section>,
+    <section key="household"><StepLabel step={6} title="Who is included in your move?" copy="Use your real household details so dependent eligibility is not assumed." /><div className="mt-7 grid gap-5 sm:grid-cols-2"><SelectField label="Household type" value={profile.household_type} options={householdTypes} onChange={(value) => update('household_type', value)} /><NumberField label="Total household members" value={profile.family_size} min={1} max={12} onChange={(value) => update('family_size', value)} /><NumberField label="Dependents" value={profile.dependents} min={0} max={11} onChange={(value) => update('dependents', value)} /><div><p className="text-sm font-bold">Spouse or partner included?</p><div className="mt-2 grid grid-cols-2 gap-2"><Choice active={profile.spouse === true} onClick={() => update('spouse', true)}>Yes</Choice><Choice active={profile.spouse === false} onClick={() => update('spouse', false)}>No</Choice></div></div></div></section>,
+    <section key="ancestry"><StepLabel step={7} title="Do you have ancestry or family connections abroad?" copy="Include countries and relationships you can document, or choose none known." /><div className="mt-7 grid gap-3 sm:grid-cols-2"><Choice active={profile.ancestry_connections === 'None known'} onClick={() => update('ancestry_connections', 'None known')}>None known</Choice><Choice active={Boolean(profile.ancestry_connections && profile.ancestry_connections !== 'None known')} onClick={() => update('ancestry_connections', '')}>Yes, I have connections</Choice></div>{profile.ancestry_connections !== null && profile.ancestry_connections !== 'None known' ? <div className="mt-5"><TextField label="Countries and relationships" value={profile.ancestry_connections} onChange={(value) => update('ancestry_connections', value)} /></div> : null}</section>,
+    <section key="regions"><StepLabel step={8} title="Where and when are you considering?" copy="Choose regions to prioritize and the timing you are currently planning around." /><p className="mt-7 text-sm font-bold">Preferred regions</p><div className="mt-3 grid gap-3 sm:grid-cols-2">{regions.map((region) => <Choice key={region} active={profile.preferred_regions.includes(region)} onClick={() => update('preferred_regions', profile.preferred_regions.includes(region) ? profile.preferred_regions.filter((item) => item !== region) : [...profile.preferred_regions, region])}>{region}</Choice>)}</div><div className="mt-5"><SelectField label="Desired relocation timeline" value={profile.timeline} options={timelines} onChange={(value) => update('timeline', value)} /></div></section>,
+  ]
+
+  return (
+    <main className="min-h-screen bg-canvas px-5 py-8 sm:py-12">
+      <div className="mx-auto max-w-3xl">
+        <div className="flex flex-wrap items-center justify-between gap-3"><div><p className="text-sm font-bold text-gold-deep">{isRetake ? 'Edit Nexit Profile' : 'Nexit Profile Wizard'}</p><p className="text-xs text-muted">Step {step + 1} of {panels.length}</p></div><Link href={isRetake ? '/settings' : '/nexitnation'} className="text-sm font-bold text-muted">Exit wizard</Link></div>
+        <div className="mt-4 flex gap-1.5" aria-hidden>{panels.map((_, index) => <span key={index} className={`h-2 flex-1 rounded-full ${index <= step ? 'bg-gold' : 'bg-line'}`} />)}</div>
+        <div className="card-surface mt-6 p-6 sm:p-10">{panels[step]}{error ? <p role="alert" className="mt-6 rounded-xl bg-danger/10 px-4 py-3 text-sm font-semibold text-danger">{error}</p> : null}<div className="mt-10 flex items-center justify-between gap-3"><button type="button" onClick={() => setStep((current) => Math.max(0, current - 1))} disabled={step === 0 || saving} className="inline-flex min-h-12 items-center gap-2 rounded-xl px-3 font-bold text-muted disabled:opacity-0"><ArrowLeft size={17} />Back</button>{step < panels.length - 1 ? <button type="button" onClick={next} disabled={!canContinue() || saving} className="gold-button disabled:cursor-not-allowed disabled:opacity-50">{saving ? <LoaderCircle size={16} className="animate-spin" /> : null}Continue<ArrowRight size={17} /></button> : <button type="button" onClick={finish} disabled={!canContinue() || saving} className="gold-button disabled:cursor-not-allowed disabled:opacity-50">{saving ? <LoaderCircle size={16} className="animate-spin" /> : null}See Nexit Pathways<ArrowRight size={17} /></button>}</div></div>
+        {!isRetake ? <button type="button" onClick={skip} disabled={saving} className="mx-auto mt-5 block text-sm font-bold text-muted underline-offset-4 hover:underline">Skip for now and explore Nexitnation</button> : null}
+        <p className="mx-auto mt-5 max-w-xl text-center text-xs leading-5 text-muted">Your answers support planning information only. Nexit does not provide legal approval or immigration advice.</p>
+      </div>
+    </main>
+  )
+}
+
+function StepLabel({ step, title, copy }: { step: number; title: string; copy: string }) {
+  return <div><p className="text-xs font-extrabold uppercase tracking-[.18em] text-gold-deep">Step {step}</p><h1 className="mt-2 font-display text-3xl font-bold text-navy sm:text-4xl">{title}</h1><p className="mt-3 text-sm leading-6 text-muted">{copy}</p></div>
+}
+
+function TextField({ label, value, onChange }: { label: string; value: string | null; onChange: (value: string) => void }) {
+  return <label className="text-sm font-bold">{label}<input className="field mt-2" value={value ?? ''} onChange={(event) => onChange(event.target.value)} /></label>
+}
+
+function NumberField({ label, value, onChange, min = 0, max = 100_000_000 }: { label: string; value: number | null; onChange: (value: number | null) => void; min?: number; max?: number }) {
+  return <label className="text-sm font-bold">{label}<input className="field mt-2" type="number" min={min} max={max} value={value ?? ''} onChange={(event) => onChange(event.target.value === '' ? null : Math.min(max, Math.max(min, Number(event.target.value))))} /></label>
+}
+
+function SelectField<T extends string>({ label, value, options, onChange }: { label: string; value: string | null; options: readonly T[]; onChange: (value: T) => void }) {
+  return <label className="text-sm font-bold">{label}<select className="field mt-2" value={value ?? ''} onChange={(event) => onChange(event.target.value as T)}><option value="" disabled>Select one</option>{options.map((option) => <option key={option}>{option}</option>)}</select></label>
+}
+
+function Choice({ active, onClick, children }: { active: boolean; onClick: () => void; children: React.ReactNode }) {
+  return <button type="button" onClick={onClick} aria-pressed={active} className={`flex min-h-14 items-center justify-between rounded-card border px-4 py-3 text-left text-sm font-bold transition ${active ? 'border-gold bg-gold-soft/60' : 'border-line bg-white hover:border-gold/50'}`}>{children}{active ? <Check size={17} /> : null}</button>
+}

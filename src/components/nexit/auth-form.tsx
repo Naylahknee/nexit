@@ -25,7 +25,7 @@ export function AuthForm({ mode, nextPath = '/dashboard' }: { mode: 'login' | 's
       })
       const result = await response.json()
       if (!response.ok) throw new Error(result.error ?? 'Unable to continue.')
-      router.push(safeNextPath(nextPath))
+      router.push(signup ? '/welcome' : safeNextPath(nextPath))
       router.refresh()
     } catch (reason) {
       setError(reason instanceof Error ? reason.message : 'Unable to continue.')

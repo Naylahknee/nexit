@@ -8,18 +8,12 @@ function loginRedirect(request: NextRequest) {
   return NextResponse.redirect(url)
 }
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const token = request.cookies.get(SESSION_COOKIE)?.value
   const secret = process.env.JWT_SECRET
-
   if (!token || !secret || secret.length < 32) return loginRedirect(request)
-
   try {
-    await jwtVerify(token, new TextEncoder().encode(secret), {
-      algorithms: ['HS256'],
-      issuer: TOKEN_ISSUER,
-      audience: TOKEN_AUDIENCE,
-    })
+    await jwtVerify(token, new TextEncoder().encode(secret), { algorithms: ['HS256'], issuer: TOKEN_ISSUER, audience: TOKEN_AUDIENCE })
     return NextResponse.next()
   } catch {
     return loginRedirect(request)
@@ -28,14 +22,9 @@ export async function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    '/onboarding/:path*',
-    '/dashboard/:path*',
-    '/nexitnation/:path*',
-    '/visa-wizard/:path*',
-    '/countries/:path*',
-    '/checklist/:path*',
-    '/cost-calculator/:path*',
-    '/documents/:path*',
-    '/settings/:path*',
+    '/onboarding/:path*', '/welcome/:path*', '/profile-wizard/:path*',
+    '/dashboard/:path*', '/nexitnation/:path*', '/pathways/:path*', '/nexit-plan/:path*',
+    '/visa-wizard/:path*', '/countries/:path*', '/checklist/:path*', '/cost-calculator/:path*',
+    '/documents/:path*', '/settings/:path*', '/greenbook/:path*', '/community/:path*', '/saved/:path*',
   ],
 }
