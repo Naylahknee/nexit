@@ -349,6 +349,15 @@ Approved UI labels:
 
 Keep `/countries`, `/visa-wizard`, and `/checklist` URLs for compatibility unless a separate migration is approved.
 
+### Nexitnation interaction
+
+- `/nexitnation` uses Mapbox GL with local polygon data from `public/data/continents.geojson`.
+- Every region feature exposes `slug`, `label`, `countryCount`, and `matchLabel`.
+- Desktop uses hover and click states on the region polygons; mobile uses the same six regions as accessible image cards.
+- A region selection routes to `/nexitnation/[region]`; the map does not replace the protected App Shell.
+- Region pages use the typed registry in `src/lib/nexitnation-data.ts` and retain **Match Score**, **Pathways**, **Community Fit**, and **Explore This Nextination** language.
+- Passport Index is an outbound research resource only. Never scrape, embed, proxy, or reproduce its passport-strength and mobility data.
+
 ## 10. Authentication and continuation flow
 
 - Authentication uses Neon user records, bcrypt password hashes, and JOSE-signed HS256 JWTs.
@@ -373,6 +382,11 @@ Current relocation imagery lives in `public/images/`:
 - `dashboard-beach-banner.png` — restrained editorial banner.
 - `footer-beach-ocean.png` — full-width footer atmosphere.
 - `travel-route-pin.png` and `airplane.png` — minimal route motifs.
+
+- `regions/*.webp` — six navy-and-gold geographic region artworks for Nexitnation map patterns, mobile cards, and region heroes.
+- `countries/*.webp` — geographic country-card artwork used by the initial Europe Nextination previews.
+
+The Nexitnation polygons in `public/data/continents.geojson` are derived from Natural Earth 1:110m Admin 0 boundaries. Keep the source note in `public/data/README.md` with the data file.
 
 Despite legacy filenames, UI copy must follow the locked lexicon. Imagery should communicate movement, global transition, decision-making, preparation, and a credible new life. It must not resemble a resort campaign, booking site, travel agency, or generic stock-photo collage.
 
