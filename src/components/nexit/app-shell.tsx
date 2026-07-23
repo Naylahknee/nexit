@@ -64,16 +64,10 @@ export function AppShell({ children, email, wizardStatus }: { children: React.Re
   return (
     <div className="min-h-screen bg-canvas md:grid md:grid-cols-[236px_1fr]">
       <aside className="fixed inset-y-0 left-0 z-30 hidden w-[236px] flex-col overflow-y-auto bg-navy-deep px-4 py-5 md:flex">
-        <div className="px-1 pb-4">
-          <Link href="/dashboard" aria-label="Nexit home" className="relative block h-14 w-44 overflow-hidden">
-            <Image
-              src="/brand/nexit-butterfly-wordmark.png"
-              alt=""
-              width={2000}
-              height={2000}
-              priority
-              className="absolute left-1/2 top-1/2 h-[190px] w-[190px] max-w-none -translate-x-1/2 -translate-y-[43%]"
-            />
+        <div className="px-2 pb-5 pt-1">
+          <Link href="/dashboard" aria-label="Nexit home" className="inline-flex items-center gap-2.5">
+            <Image src="/brand/nexit-butterfly.png" alt="" width={34} height={34} priority style={{ width: 34, height: 34 }} className="h-auto" />
+            <span className="font-display text-2xl font-bold leading-none text-white"><span className="text-gold">N</span>exit</span>
           </Link>
         </div>
         <nav className="space-y-1" aria-label="Main navigation">
