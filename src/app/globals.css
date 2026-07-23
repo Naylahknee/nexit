@@ -12,18 +12,27 @@
   --color-teal-soft: #dff5f2;
   --color-canvas: #f4f6f9;
   --color-line: #e7ebf1;
+  --color-line-strong: #dbe1ea;
   --color-ink: #17305b;
   --color-muted: #6b7a92;
-  --color-ok: #3ecf8e;
-  --color-warn: #f3c516;
+  --color-muted-soft: #8090a8;
+  --color-ok: #1f7a4d;
+  --color-ok-soft: #d6f3e4;
+  --color-warn: #b8890a;
+  --color-warn-soft: #fbeeb6;
   --color-danger: #f0637a;
+  --color-info: #3a5a94;
+  --color-info-soft: #e3ebf7;
   --radius-card: 16px;
+  --radius-tile: 14px;
   --radius-pill: 20px;
   --radius-field: 12px;
   --font-sans: "Geist", "Geist Fallback", ui-sans-serif, system-ui, sans-serif;
   --font-display: "Playfair Display", Georgia, serif;
   --shadow-card: 0 10px 30px -24px rgba(16, 34, 68, 0.5);
+  --shadow-tile: 0 10px 30px -26px rgba(16, 34, 68, 0.5);
   --shadow-gold: 0 10px 22px -10px rgba(216, 169, 4, 0.7);
+  --shadow-shell: 0 40px 90px -40px rgba(16, 34, 68, 0.55);
 }
 
 :root {
