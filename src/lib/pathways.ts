@@ -96,6 +96,43 @@ export const PATHWAYS: PathwayDefinition[] = [
 
 export const RESEARCH_DISCLAIMER = 'Nexit provides research information, not legal advice or an eligibility decision. Requirements, fees, and processing times can change. Confirm every detail with the linked government authority before applying.'
 
+// Planning-guide thresholds per pathway (USD-equivalent, approximate — clearly
+// labelled as planning guides, not official figures). Amounts are compared to
+// the profile so Strong Match reflects real magnitude, not just field presence.
+type PathwayThreshold = {
+  minMonthlyIncome?: number
+  perDependentIncome?: number
+  minSavings?: number
+  eligibleIncomeTypes?: string[]
+}
+
+const PATHWAY_THRESHOLDS: Record<string, PathwayThreshold> = {
+  'portugal-remote-work': { minMonthlyIncome: 3400, perDependentIncome: 700 },
+  'germany-eu-blue-card': { minMonthlyIncome: 4600, perDependentIncome: 600 },
+  'portugal-entrepreneur': { minSavings: 10_000, eligibleIncomeTypes: ['Self-employment', 'Mixed'] },
+  'portugal-passive-income': { minMonthlyIncome: 1800, perDependentIncome: 900, eligibleIncomeTypes: ['Pension', 'Investments', 'Mixed'] },
+  'canada-study-permit': { minSavings: 15_000 },
+  'spain-family-reunification': { minMonthlyIncome: 2400, perDependentIncome: 600 },
+  'ireland-foreign-births': {},
+  'new-zealand-active-investor-plus': { minSavings: 5_000_000 },
+}
+
+// EU/EEA free-movement signal: a citizen of one member state can generally live
+// in another without these national visas. Used only to surface an informative
+// signal, never to assert legal status.
+const EU_EEA_CITIZENSHIPS = new Set([
+  'austria', 'belgium', 'bulgaria', 'croatia', 'cyprus', 'czechia', 'czech republic', 'denmark', 'estonia',
+  'finland', 'france', 'germany', 'greece', 'hungary', 'iceland', 'ireland', 'italy', 'latvia', 'liechtenstein',
+  'lithuania', 'luxembourg', 'malta', 'netherlands', 'norway', 'poland', 'portugal', 'romania', 'slovakia',
+  'slovenia', 'spain', 'sweden',
+])
+const EU_PATHWAY_COUNTRIES = new Set(['Portugal', 'Germany', 'Spain', 'Ireland'])
+
+function hasEuFreedomOfMovement(profile: RelocationProfile, pathway: PathwayDefinition) {
+  const citizenship = profile.citizenship?.trim().toLowerCase()
+  return Boolean(citizenship && EU_EEA_CITIZENSHIPS.has(citizenship) && EU_PATHWAY_COUNTRIES.has(pathway.country))
+}
+
 function profileSignals(profile: RelocationProfile, pathway: PathwayDefinition) {
   const met: string[] = []
   const missing: string[] = []
@@ -103,34 +140,59 @@ function profileSignals(profile: RelocationProfile, pathway: PathwayDefinition) 
   if (selected) met.push(`${pathway.category} selected in your Nexit Profile`)
   else missing.push(`Add ${pathway.category} as a profile goal`)
 
+  // Citizenship signal — EU/EEA free movement often removes the need for a visa.
+  if (hasEuFreedomOfMovement(profile, pathway)) {
+    met.push('Your EU/EEA citizenship may already grant residence rights here')
+  }
+
+  const threshold = PATHWAY_THRESHOLDS[pathway.id] ?? {}
+  const dependents = profile.dependents ?? 0
+
+  // Income magnitude (with per-dependent bump)
+  if (threshold.minMonthlyIncome !== undefined) {
+    const required = threshold.minMonthlyIncome + (threshold.perDependentIncome ?? 0) * dependents
+    const guide = `~$${required.toLocaleString()}/mo planning guide`
+    if (profile.monthly_income === null) missing.push(`Add monthly income to compare against the ${guide}`)
+    else if (profile.monthly_income >= required) met.push(`Monthly income meets the ${guide}`)
+    else missing.push(`Monthly income is below the ${guide}`)
+  }
+
+  // Income type eligibility
+  if (threshold.eligibleIncomeTypes) {
+    if (profile.income_type && threshold.eligibleIncomeTypes.includes(profile.income_type)) met.push(`${profile.income_type} income fits this route`)
+    else missing.push(`Income type should be ${threshold.eligibleIncomeTypes.join(' or ')}`)
+  }
+
+  // Savings / proof-of-funds magnitude
+  if (threshold.minSavings !== undefined) {
+    const guide = `~$${threshold.minSavings.toLocaleString()} planning guide`
+    if (profile.savings === null) missing.push(`Add savings to compare against the ${guide}`)
+    else if (profile.savings >= threshold.minSavings) met.push(`Savings meet the ${guide}`)
+    else missing.push(`Savings are below the ${guide}`)
+  }
+
+  // Category-specific non-financial signals
   if (pathway.category === 'Remote Work') {
     if (profile.remote) met.push('Remote work reported')
     else missing.push('Qualifying remote work evidence')
-    if (profile.monthly_income !== null) met.push('Monthly income provided for threshold comparison')
   } else if (pathway.category === 'Employment') {
     if (profile.occupation) met.push('Occupation provided')
+    else missing.push('Add your occupation')
     if (profile.education || profile.credentials) met.push('Education or credentials provided')
     missing.push('Qualifying local job offer or contract')
-  } else if (pathway.category === 'Entrepreneurship') {
-    if (profile.income_type === 'Self-employment' || profile.income_type === 'Mixed') met.push('Self-employment income reported')
-    else missing.push('Business or independent-professional evidence')
-    if ((profile.savings ?? 0) > 0) met.push('Savings amount provided')
-  } else if (pathway.category === 'Passive Income / Retirement') {
-    if (['Pension', 'Investments', 'Mixed'].includes(profile.income_type ?? '')) met.push('Passive or mixed income reported')
-    else missing.push('Stable passive-income evidence')
   } else if (pathway.category === 'Education') {
     if (profile.education) met.push('Education history provided')
     missing.push('Acceptance from a designated learning institution')
   } else if (pathway.category === 'Family Reunification') {
-    if (profile.spouse || (profile.dependents ?? 0) > 0) met.push('Household relationship details provided')
+    if (profile.spouse || dependents > 0) met.push('Household relationship details provided')
+    else missing.push('Add the family member you would join or sponsor')
     missing.push('Qualifying sponsor and documented family relationship')
   } else if (pathway.category === 'Ancestry') {
     if (profile.ancestry_connections && profile.ancestry_connections !== 'None known') met.push('Ancestry connection reported')
     else missing.push('A potentially qualifying ancestry connection')
     missing.push('Civil records proving the family chain')
   } else if (pathway.category === 'Investment') {
-    if ((profile.savings ?? 0) > 0) met.push('Savings amount provided for separate currency and asset verification')
-    missing.push('Proof of at least NZD $5 million in qualifying investment funds')
+    missing.push('Proof of qualifying investment funds and lawful source')
   }
 
   return { selected, met, missing }
