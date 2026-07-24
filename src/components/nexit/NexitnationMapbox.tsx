@@ -8,22 +8,7 @@ import 'mapbox-gl/dist/mapbox-gl.css'
 import './nexitnation-map.css'
 import { regionList, type RegionSlug } from '@/lib/nexitnation-data'
 
-// Region centroids (lng, lat) for badge placement.
-const REGION_CENTERS: Record<RegionSlug, [number, number]> = {
-  europe: [14, 52],
-  africa: [20, 4],
-  asia: [95, 36],
-  'north-america': [-100, 45],
-  'latin-america': [-63, -12],
-  oceania: [140, -25],
-}
-
-const GOLD = '#E5A93C'
-const DIM = '#040B14'
-
-type MapProfile = { complete: boolean; matches: Record<RegionSlug, number> | null }
-
-export function NexitnationMapbox({ profile }: { profile: MapProfile }) {
+export function NexitnationMapbox({ profile }: { profile: { complete: boolean; matches: Record<RegionSlug, number> | null } }) {
   const router = useRouter()
   const containerRef = useRef<HTMLDivElement>(null)
   const mapRef = useRef<mapboxgl.Map | null>(null)
@@ -36,85 +21,29 @@ export function NexitnationMapbox({ profile }: { profile: MapProfile }) {
     const map = new mapboxgl.Map({
       accessToken: token,
       container: containerRef.current,
-      style: 'mapbox://styles/mapbox/satellite-v9',
-      center: [12, 25],
-      zoom: 1.35,
-      minZoom: 1,
-      maxZoom: 6,
+      style: 'mapbox://styles/mapbox/streets-v12',
+      center: [0, 20],
+      zoom: 1.5,
       projection: 'mercator',
       attributionControl: false,
-      cooperativeGestures: true,
     })
     mapRef.current = map
-    map.addControl(new mapboxgl.NavigationControl({ showCompass: false }), 'top-right')
-    map.addControl(new mapboxgl.AttributionControl({ compact: true }), 'bottom-right')
+
+    map.on('load', () => {
+      map.resize()
+    })
 
     map.on('error', (event) => {
       const message = (event.error as Error | undefined)?.message ?? ''
       if (/access token|unauthorized|401/i.test(message)) setMapError(true)
     })
 
-    map.on('style.load', () => {
-      // Dark-earth dimmer: a world-covering fill above satellite, below markers.
-      if (!map.getSource('nexit-dim')) {
-        map.addSource('nexit-dim', {
-          type: 'geojson',
-          data: { type: 'Feature', properties: {}, geometry: { type: 'Polygon', coordinates: [[[-180, -85], [180, -85], [180, 85], [-180, 85], [-180, -85]]] } },
-        })
-        map.addLayer({ id: 'nexit-dim', type: 'fill', source: 'nexit-dim', paint: { 'fill-color': DIM, 'fill-opacity': 0.55 } })
-      }
-      // Glowing gold country borders from the Mapbox Streets vector source.
-      if (!map.getSource('nexit-admin')) {
-        map.addSource('nexit-admin', { type: 'vector', url: 'mapbox://mapbox.mapbox-streets-v8' })
-        map.addLayer({
-          id: 'nexit-admin-glow', type: 'line', source: 'nexit-admin', 'source-layer': 'admin',
-          filter: ['==', ['get', 'admin_level'], 0],
-          paint: { 'line-color': GOLD, 'line-width': 2.2, 'line-blur': 3, 'line-opacity': 0.9 },
-        })
-        map.addLayer({
-          id: 'nexit-admin-crisp', type: 'line', source: 'nexit-admin', 'source-layer': 'admin',
-          filter: ['==', ['get', 'admin_level'], 0],
-          paint: { 'line-color': GOLD, 'line-width': 0.6, 'line-opacity': 0.9 },
-        })
-      }
-    })
-
-    // Loop through region coordinates → custom HTML badge markers.
-    const markers = regionList.map((region) => {
-      const badge = document.createElement('button')
-      badge.type = 'button'
-      badge.className = 'custom-region-badge'
-      badge.setAttribute('aria-label', `Explore ${region.name}: ${region.countryCount} countries`)
-
-      const name = document.createElement('span')
-      name.className = 'custom-region-badge__name'
-      name.textContent = region.name
-
-      const count = document.createElement('span')
-      count.className = 'custom-region-badge__count'
-      count.textContent = `${region.countryCount} countries`
-
-      const match = document.createElement('span')
-      match.className = 'custom-region-badge__match'
-      const value = profile.matches?.[region.slug]
-      match.textContent = profile.complete && value !== undefined ? `Nexit Match ${value}%` : 'Complete profile'
-
-      badge.append(name, count, match)
-      badge.addEventListener('click', () => router.push(`/nexitnation/${region.slug}`))
-
-      return new mapboxgl.Marker({ element: badge, anchor: 'center' })
-        .setLngLat(REGION_CENTERS[region.slug])
-        .addTo(map)
-    })
-
     return () => {
-      markers.forEach((marker) => marker.remove())
       map.remove()
       mapRef.current = null
     }
-  }, [token, mapError, profile, router])
+  }, [token, mapError, router])
 
-  // Graceful fallback when no Mapbox token is configured — regions stay usable.
   if (!token || mapError) {
     return (
       <section className="hero-grid rounded-[24px] bg-navy-deep p-6 text-white sm:p-8" aria-label="Nexitnation regions">
