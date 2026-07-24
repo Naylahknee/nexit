@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import NexitnationMap from '@/components/nexit/NexitnationMap'
+import { NexitnationMapbox } from '@/components/nexit/NexitnationMapbox'
 import { requireCurrentUser } from '@/lib/auth'
 import { NEXIT_LEXICON } from '@/lib/lexicon'
 import { loadNexitnationProfile } from '@/lib/userProfile'
@@ -21,11 +21,11 @@ export default async function NexitnationPage() {
           {NEXIT_LEXICON.mapTitle}
         </h1>
         <p className="mt-2 max-w-2xl text-muted">
-          Select an illustrated region to open its Nextination page. Mapbox remains available for detailed country and local maps.
+          Select a region on the live map to open its Nextination page.
         </p>
       </header>
 
-      <NexitnationMap profile={{ complete: profile !== null, matches: profile?.regionMatches ?? null }} />
+      <NexitnationMapbox profile={{ complete: profile !== null, matches: profile?.regionMatches ?? null }} />
     </div>
   )
 }
